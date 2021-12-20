@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>View All To Do Lists</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <!----------- HTML-elements -------------->
+
+  <h1>My Private To Do Lists</h1>
+  <button id="btnCreate" class="button">New List</button>
+  <div id="listContainer"></div>
+
+  <button id="btnChangePw" class="button">Change Password</button>
+  <button id="sharedLists" class="button">Show All Public Lists</button><br><br>
+  <button id="btnLogOut" class="button">Log Out</button>
+
+  <!------------- JavaScript --------------->
+  <script>
+    let frameContainer = document.getElementById("frameContainer");
+    let listContainer = document.getElementById("listContainer");
+
+    let btnCreate = document.getElementById("btnCreate");
+    let btnChangePw = document.getElementById("btnChangePw");
+    let btnShared = document.getElementById("sharedLists");
+    let btnShowList = document.getElementById("btnShowList");
+    let btnLogOut = document.getElementById("btnLogOut");
+
+    const NEWLine = "<br>";
+
+    //-----------------------------------------------
+
+    btnCreate.addEventListener("click", async function (evt) {
+      let url = "/createNewList";
+      let token = localStorage.getItem("token");
+      window.location.href = "createToDoList.html";
+    });
+
+    btnChangePw.addEventListener("click", async function (evt) {
+      let url = "/users/updatePassword";
+      let token = localStorage.getItem("token");
+      window.location.href = "updatePassword.html";
+    });
+
+    async function showAllLists() {
+      let url = "/showAllLists";
+      let token = localStorage.getItem("token");
+
+      let cfg = {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          "authorization": token,
+        },
+      };
+
+      try {
+        let response = await fetch(url, cfg);
+        let data = await response.json();
+
+        if (response.status != 200) {
+          throw data.error;
+        }
+
+        listContainer.innerHTML = "";
+
+        if (data.length < 1) {
+          let div = document.createElement("div");
+          div.innerHTML = "No lists available, press the New List button above to get started.";
+          listContainer.appendChild(div);
+        }
+        for (let value of data) {
+          let date = new Date(value.date);
+          let html = "<p>" + date.toLocaleDateString() + "</p>";
+          html += "<h2>" + value.heading + "</h2>";
+
+          let div = document.createElement("div");
+          div.className = "listContainer";
+          div.innerHTML = html;
+          listContainer.appendChild(div);
+
+          let showBtn = document.createElement("button");
+          showBtn.className = "button";
+          showBtn.innerHTML = "Show List";
+          div.appendChild(showBtn);
+
+          let delBtn = document.createElement("button");
+          delBtn.className = "button";
+          delBtn.innerHTML = "Delete List";
+          div.appendChild(delBtn);
+
+          delBtn.addEventListener("click", function (evt) {
+            deleteLists(value.id);
+          });
+
+          showBtn.addEventListener("click", function (evt) {
+            let url = "/showToDoList";
+            let divContent = localStorage.setItem("divContent", value.items);
+            let divHeading = localStorage.setItem(
+              "divHeading",
+              value.heading
+            );
+            let divID = localStorage.setItem("divID", value.id);
+            window.location.href = "showToDoList.html";
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    //-----------------------------------------------
+    async function deleteLists(todoID) {
+      let url = "/showAllLists";
+      let token = localStorage.getItem("token");
+
+      let updata = {
+        id: todoID,
+      };
+
+      let cfg = {
+        method: "DELETE",
+        headers: { "content-type": "application/json", "authorization": token },
+        body: JSON.stringify(updata),
+      };
+
+      try {
+        let response = await fetch(url, cfg);
+        let data = await response.json();
+
+        if (response.status != 200) {
+          throw data.error;
+        }
+
+        showAllLists();
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    // start ----------------------------------------
+    showAllLists();
+
+    btnShared.addEventListener("click", function (evt) {
+      window.location.href = "showSharedLists.html";
+    });
+
+    btnLogOut.addEventListener("click", function (evt) {
+      localStorage.setItem("token", "");
+      location.href = "index.html";
+    });
+
+  </script>
+</body>
+
+</html>

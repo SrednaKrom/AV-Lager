@@ -1,52 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
-    <title>TestClient</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log In Page</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
 
     <!----------- HTML-elements -------------->
-    
-        
+
+    <h1>Login</h1><br>
+    <input id="inpUsername" type="text" placeholder="Username" /><br>
+    <input id="inpPassword" type="password" placeholder="Password" /><br><br>
+
+    <button id="btnLogin" class="btnLogin">Login</button> <br>
+    <h3 id="txtResult"></h3>
+
+    <button id="btnUserCreate" class="button" onclick="createNewUser()">Create a New User</button>
+    <button id="btnUserDelete" class="button" onclick="deleteUser()">Delete a User</button>
     <!------------- JavaScript --------------->
     <script>
 
-        async function sendRequest() {
+        let inpUsername = document.getElementById('inpUsername');
+        let inpPassword = document.getElementById('inpPassword');
+        let btnLogin = document.getElementById('btnLogin');
+        let txtResult = document.getElementById('txtResult');
 
-            let url = "/";
+        // --------------------------------------
+        btnLogin.addEventListener('click', async function (evt) {
 
-            let updata = {
-                country: "Belgium",
-                capital: "Brussels"
-            }
+            let url = "/users/login";
+            let credString = createCredentialString(inpUsername.value.toLowerCase(), inpPassword.value.toLowerCase());
 
             let cfg = {
                 method: "POST",
-                headers: {"content-type":"application/json"},
-                body: JSON.stringify(updata)
+                headers: { "authorization": credString }
             }
 
             try {
                 let response = await fetch(url, cfg);
-                let data = await response.text();
-                console.log(data); //hello from POST
+                let data = await response.json();
+
+                if (response.status != 200) {
+                    throw data.error;
+                }
+
+                txtResult.innerHTML = data.msg;
+                localStorage.setItem("token", data.token);
+                window.location.href = "showAllLists.html";
+
             }
-            catch(error) {
-                console.log(error);
+            catch (error) {
+                txtResult.innerHTML = error;
             }
+        });
+
+        function createNewUser() {
+            let url = "/users/updatePassword";
+            window.location.href = "usercreate.html";
         }
-        
-        sendRequest();
+
+        function deleteUser() {
+            let url = "/users/updatePassword";
+            window.location.href = "deleteuser.html";
+        }
+
+        // --------------------------------------
+        function createCredentialString(username, password) {
+            let combinedStr = username + ":" + password;
+            let b64Str = btoa(combinedStr);
+            return "basic " + b64Str;
+        }
 
     </script>
-
-    <!---------------- CSS ------------------->
-    <style>        
-
-    </style>
-
 </body>
 
 </html>
