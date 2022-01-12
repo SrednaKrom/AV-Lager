@@ -4,37 +4,57 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>View All To Do Lists</title>
+  <title>Public Access</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
   <!----------- HTML-elements -------------->
 
-  <h1>My Private To Do Lists</h1>
-  <button id="btnCreate" class="button">New List</button>
-  <div id="listContainer"></div>
+  <h1>Public Access</h1>
 
-  <button id="btnChangePw" class="button">Change Password</button>
-  <button id="sharedLists" class="button">Show All Public Lists</button><br><br>
-  <button id="btnLogOut" class="button">Log Out</button>
 
   <!------------- JavaScript --------------->
   <script>
-    let frameContainer = document.getElementById("frameContainer");
-    let listContainer = document.getElementById("listContainer");
 
-    let btnCreate = document.getElementById("btnCreate");
-    let btnChangePw = document.getElementById("btnChangePw");
-    let btnShared = document.getElementById("sharedLists");
-    let btnShowList = document.getElementById("btnShowList");
-    let btnLogOut = document.getElementById("btnLogOut");
-
-    const NEWLine = "<br>";
 
     //-----------------------------------------------
 
-    btnCreate.addEventListener("click", async function (evt) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /* btnCreate.addEventListener("click", async function (evt) {
       let url = "/createNewList";
       let token = localStorage.getItem("token");
       window.location.href = "createToDoList.html";
@@ -152,7 +172,7 @@
     btnLogOut.addEventListener("click", function (evt) {
       localStorage.setItem("token", "");
       location.href = "index.html";
-    });
+    }); */
 
   </script>
 </body>

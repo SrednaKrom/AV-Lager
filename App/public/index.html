@@ -9,22 +9,18 @@
 </head>
 
 <body>
-
+    <div class="navbar">
+        <button id="btnNav"href="#home">Home</button>
+    </div>
     <!----------- HTML-elements -------------->
 
-    <h1>Login</h1><br>
-    <input id="inpUsername" type="text" placeholder="Username" /><br>
-    <input id="inpPassword" type="password" placeholder="Password" /><br><br>
+    <h1>AV-Lager UiA Grimstad</h1><br>
+    <p>Some text..</p>
 
-    <button id="btnLogin" class="btnLogin">Login</button> <br>
-    <h3 id="txtResult"></h3>
-
-    <button id="btnUserCreate" class="button" onclick="createNewUser()">Create a New User</button>
-    <button id="btnUserDelete" class="button" onclick="deleteUser()">Delete a User</button>
     <!------------- JavaScript --------------->
     <script>
 
-        let inpUsername = document.getElementById('inpUsername');
+        /* let inpUsername = document.getElementById('inpUsername');
         let inpPassword = document.getElementById('inpPassword');
         let btnLogin = document.getElementById('btnLogin');
         let txtResult = document.getElementById('txtResult');
@@ -48,7 +44,7 @@
                     throw data.error;
                 }
 
-                txtResult.innerHTML = data.msg;
+                txtResult.innerHTML = "Hello World";
                 localStorage.setItem("token", data.token);
                 window.location.href = "showAllLists.html";
 
@@ -73,7 +69,7 @@
             let combinedStr = username + ":" + password;
             let b64Str = btoa(combinedStr);
             return "basic " + b64Str;
-        }
+        } */
 
     </script>
 </body>

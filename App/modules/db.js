@@ -11,12 +11,24 @@ const pool = new pg.Pool({
 
 let dbMethods = {};
 
-// ------------------------------------
-dbMethods.getAllToDoLists = function (userid) {
-  let sql = "SELECT * FROM todolist WHERE userid = $1";
-  let values = [userid];
-  return pool.query(sql, values);
+dbMethods.createUser = function (username, password, salt) {
+  let sql =
+    "INSERT INTO adminuser (id, username, password, salt) VALUES(DEFAULT, $1, $2, $3) returning *";
+  let values = [username, password, salt];
+  return pool.query(sql, values); //return the promise
 };
 
+// ------------------------------------
+dbMethods.getUser = function (username) {
+  let sql = "SELECT * FROM adminuser WHERE username = $1";
+  let values = [username];
+  return pool.query(sql, values); //return the promise
+};
+
+dbMethods.deleteUser = function (id) {
+  let sql = "DELETE FROM adminuser WHERE id = $1 RETURNING *";
+  let values = [id];
+  return pool.query(sql, values); //return the promise
+};
 // export dbMethods -------------------------
 module.exports = dbMethods;
